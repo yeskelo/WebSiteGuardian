@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SetPreferenceActivity"
+            android:name=".SetPrefActivity"
             android:label="@string/title_activity_main" >
         </activity>
     </application>

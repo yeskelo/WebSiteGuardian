@@ -64,11 +64,11 @@ public class MainActivity extends Activity {
 				.getDefaultSharedPreferences(this);
 
 		boolean my_checkbox_preference = mySharedPreferences.getBoolean(
-				"checkbox_preference", false);
+				"service_preference", false);
 		prefCheckBox.setChecked(my_checkbox_preference);
 
 		String my_edittext_preference = mySharedPreferences.getString(
-				"edittext_preference", "");
+				"site_URL_preference", "");
 		prefEditText.setText(my_edittext_preference);
 
 	}
