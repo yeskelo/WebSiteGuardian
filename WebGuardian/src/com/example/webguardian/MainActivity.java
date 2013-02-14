@@ -7,13 +7,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener{
 
 	CheckBox prefCheckBox;
 	TextView prefEditText;
+	
+	Button runButton;
+	Button stopButton;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,8 +28,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		prefCheckBox = (CheckBox) findViewById(R.id.prefCheckBox);
-		prefEditText = (TextView) findViewById(R.id.prefEditText);
+		/*prefEditText = (TextView) findViewById(R.id.prefEditText);*/
+		
+		runButton = (Button) findViewById(R.id.runButton);
+		stopButton = (Button) findViewById(R.id.stopButton);
 
+		runButton.setOnClickListener((OnClickListener) this);
+		stopButton.setOnClickListener((OnClickListener) this); 
 		loadPref();
 	}
 
@@ -35,11 +47,6 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		/*
-		 * Because it's onlt ONE option in the menu. In order to make it simple,
-		 * We always start SetPreferenceActivity without checking.
-		 */
-
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, SetPrefActivity.class);
 		startActivityForResult(intent, 0);
@@ -49,13 +56,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		// super.onActivityResult(requestCode, resultCode, data);
-
-		/*
-		 * To make it simple, always re-load Preference setting.
-		 */
-
 		loadPref();
 	}
 
@@ -69,8 +69,20 @@ public class MainActivity extends Activity {
 
 		String my_edittext_preference = mySharedPreferences.getString(
 				"site_URL_preference", "");
-		prefEditText.setText(my_edittext_preference);
-
+/*		prefEditText.setText(my_edittext_preference);
+*/
+	}
+	
+	@Override
+	public void onClick(View src){
+		switch (src.getId()) {
+		case R.id.runButton:	
+			startService(new Intent(this, CheckWebSiteService.class));
+			break;
+		case R.id.stopButton:
+			stopService(new Intent(this, CheckWebSiteService.class));
+			break;
+		}
 	}
 
 }

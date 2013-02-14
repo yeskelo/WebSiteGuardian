@@ -26,6 +26,8 @@
             android:name=".SetPrefActivity"
             android:label="@string/title_activity_main" >
         </activity>
+        
+        <service android:name=".CheckWebSiteService" ></service>
     </application>
 
 </manifest>
