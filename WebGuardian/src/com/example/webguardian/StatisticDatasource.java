@@ -15,8 +15,6 @@ public class StatisticDatasource {
 	// Database fields
 	private SQLiteDatabase database;
 	private StatisticDatabaseHelper dbHelper;
-	private String[] allColumns = { StatisticTable.COLUMN_ID,
-			StatisticTable.COLUMN_SITE_STATE, StatisticTable.COLUMN_DATE };
 
 	public StatisticDatasource(Context context) {
 		dbHelper = StatisticDatabaseHelper.getInstance(context);
