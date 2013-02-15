@@ -29,6 +29,8 @@ public class CheckWebSiteService extends Service {
 
 	private Intent intent;
 	private RemoteViews remoteViews;
+	
+	private StatisticDatasource datasource;
 
 	private SharedPreferences pref;
 	Timer timer = new Timer();
@@ -43,6 +45,8 @@ public class CheckWebSiteService extends Service {
 	public void onCreate() {
 		super.onCreate();	
 		pref = PreferenceManager.getDefaultSharedPreferences(this);		
+		datasource = new StatisticDatasource(this);
+		datasource.open();
 		Log.d(TAG, "onCreated");
 	}
 
@@ -61,6 +65,7 @@ public class CheckWebSiteService extends Service {
 	public void onDestroy() {
 		Log.d(TAG, "onDestroy");
 		timer.cancel();
+		datasource.close();
 		super.onDestroy();
 	}
 
@@ -100,14 +105,17 @@ public class CheckWebSiteService extends Service {
 			switch (is_online()) {
 			case 0:
 				remoteViews.setTextViewText(R.id.siteCode, "away");
+				datasource.addRow("away");
 				Log.d(TAG, "away");
 				break;
 			case 1:
 				remoteViews.setTextViewText(R.id.siteCode, "busy");
+				datasource.addRow("busy");
 				Log.d(TAG, "busy");
 				break;
 			case 2:
 				remoteViews.setTextViewText(R.id.siteCode, "online");
+				datasource.addRow("online");
 				Log.d(TAG, "online");
 			}
 		}

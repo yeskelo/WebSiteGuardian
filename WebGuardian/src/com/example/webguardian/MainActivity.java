@@ -17,19 +17,19 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener{
 
 	Button runButton;
-	Button stopButton;
+	Button stopButton;	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);		
 		
 		runButton = (Button) findViewById(R.id.runButton);
 		stopButton = (Button) findViewById(R.id.stopButton);
 
 		runButton.setOnClickListener((OnClickListener) this);
 		stopButton.setOnClickListener((OnClickListener) this);
-		
+				
 	}
 
 	@Override
@@ -58,6 +58,5 @@ public class MainActivity extends Activity implements OnClickListener{
 			stopService(new Intent(this, CheckWebSiteService.class));
 			break;
 		}
-	}
-
+	}	
 }
