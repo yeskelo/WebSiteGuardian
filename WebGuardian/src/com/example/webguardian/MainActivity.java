@@ -16,22 +16,13 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener{
 
-	CheckBox prefCheckBox;
-	TextView prefSiteUrl;
-	TextView prefRefreshTime;
-	
 	Button runButton;
 	Button stopButton;
 	
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		prefCheckBox = (CheckBox) findViewById(R.id.prefCheckBox);
-		prefSiteUrl = (TextView) findViewById(R.id.siteURL);
-		prefRefreshTime = (TextView) findViewById(R.id.refreshTime);
 		
 		runButton = (Button) findViewById(R.id.runButton);
 		stopButton = (Button) findViewById(R.id.stopButton);
@@ -39,7 +30,6 @@ public class MainActivity extends Activity implements OnClickListener{
 		runButton.setOnClickListener((OnClickListener) this);
 		stopButton.setOnClickListener((OnClickListener) this);
 		
-		loadPref();
 	}
 
 	@Override
@@ -58,21 +48,6 @@ public class MainActivity extends Activity implements OnClickListener{
 		return true;
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		loadPref();
-	}
-
-	private void loadPref() {
-		SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-		boolean my_checkbox_preference = mySharedPreferences.getBoolean("service_preference", false);
-		prefCheckBox.setChecked(my_checkbox_preference);
-		prefSiteUrl.setText(mySharedPreferences.getString("site_URL_preference", "http://urod.ru"));
-		prefRefreshTime.setText(mySharedPreferences.getString("refresh_time", "10"));
-
-	}
-	
 	@Override
 	public void onClick(View src){
 		switch (src.getId()) {
