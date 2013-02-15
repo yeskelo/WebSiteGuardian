@@ -12,6 +12,14 @@
             android:key="site_URL_preference"
             android:summary="This option allow to set URL of the site"
             android:title="Site URL" />
+    </PreferenceCategory>    
+    <PreferenceCategory android:title="Refresh time" >
+        <EditTextPreference
+            android:dialogTitle="Refresh time"
+            android:key="refresh_time"
+            android:summary="This option allow to set timeout between refresh"
+            android:title="Refresh time" />
     </PreferenceCategory>
+    
 
 </PreferenceScreen>

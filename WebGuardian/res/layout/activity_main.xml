@@ -20,6 +20,37 @@
             android:layout_height="wrap_content"
             android:clickable="false"
             android:text="Enable WebSiteGuardian" />
+
+        <TextView
+            android:id="@+id/siteURLDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Site URL" />
+
+        <EditText
+            android:id="@+id/siteURL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/refreshTimeDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh time" />
+
+        <EditText
+            android:id="@+id/refreshTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:ems="10"
+            android:inputType="number" />
+
     </LinearLayout>
 
     <Button
@@ -39,5 +70,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="41dp"
         android:text="Stop" />
+
+    <TextView
+        android:id="@+id/siteCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/runButton"
+        android:layout_alignLeft="@+id/runButton"
+        android:layout_marginBottom="125dp"
+        android:text="Site code" />
 
 </RelativeLayout>
