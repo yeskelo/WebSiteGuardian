@@ -75,9 +75,9 @@
         android:id="@+id/siteCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/runButton"
         android:layout_alignLeft="@+id/runButton"
-        android:layout_marginBottom="125dp"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="35dp"
         android:text="Site code" />
 
 </RelativeLayout>

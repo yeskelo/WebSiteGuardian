@@ -10,7 +10,14 @@ public class StatisticDatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "statistictable.db";
 	private static final int DATABASE_VERSION = 1;
 
-	public StatisticDatabaseHelper(Context context) {
+	private static StatisticDatabaseHelper dbHelper = null;
+	
+	public static StatisticDatabaseHelper getInstance(Context context){
+		if (dbHelper==null)
+			dbHelper = new StatisticDatabaseHelper(context);
+		return dbHelper;
+	}
+	private StatisticDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 

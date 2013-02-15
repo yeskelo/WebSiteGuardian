@@ -17,7 +17,9 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener{
 
 	Button runButton;
-	Button stopButton;	
+	Button stopButton;
+	TextView siteStatus;
+	private StatisticDatasource datasource;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,10 +28,13 @@ public class MainActivity extends Activity implements OnClickListener{
 		
 		runButton = (Button) findViewById(R.id.runButton);
 		stopButton = (Button) findViewById(R.id.stopButton);
+		siteStatus = (TextView) findViewById(R.id.siteCode);
 
 		runButton.setOnClickListener((OnClickListener) this);
 		stopButton.setOnClickListener((OnClickListener) this);
-				
+		
+		datasource = new StatisticDatasource(this);
+		datasource.open();				
 	}
 
 	@Override
@@ -50,12 +55,16 @@ public class MainActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View src){
+		datasource.open();
+		Statistic st = datasource.getLastState();
 		switch (src.getId()) {
-		case R.id.runButton:	
+		case R.id.runButton:
 			startService(new Intent(this, CheckWebSiteService.class));
+			siteStatus.setText(st.getState() + " : " + st.getDate());
 			break;
 		case R.id.stopButton:
 			stopService(new Intent(this, CheckWebSiteService.class));
+			siteStatus.setText(st.getState() + " : " + st.getDate());
 			break;
 		}
 	}	

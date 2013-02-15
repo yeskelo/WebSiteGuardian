@@ -19,7 +19,7 @@ public class StatisticDatasource {
 			StatisticTable.COLUMN_SITE_STATE, StatisticTable.COLUMN_DATE };
 
 	public StatisticDatasource(Context context) {
-		dbHelper = new StatisticDatabaseHelper(context);
+		dbHelper = StatisticDatabaseHelper.getInstance(context);
 	}
 
 	public void open() throws SQLException {
@@ -37,20 +37,21 @@ public class StatisticDatasource {
 		ContentValues values = new ContentValues();
 		values.put(StatisticTable.COLUMN_SITE_STATE, siteStatus);
 		values.put(StatisticTable.COLUMN_DATE, dateFormat.format(cal.getTime()));
-        long insertId = database.insert(StatisticTable.STATISTIC_TABLE, null, values);
-	    Cursor cursor = database.query(StatisticTable.STATISTIC_TABLE,
-			        allColumns, StatisticTable.COLUMN_ID + " = " + insertId, null,
-			        null, null, null);
-	    cursor.moveToFirst();
-	    Statistic newRow = cursorToStatistic(cursor);
-	    cursor.close();		
+        database.insert(StatisticTable.STATISTIC_TABLE, null, values);
 	}
 	
-	  private Statistic cursorToStatistic(Cursor cursor) {
-		    Statistic statistic = new Statistic();
-		    statistic.setId(cursor.getLong(0));
-		    statistic.setState(cursor.getString(1));
-		    statistic.setDate(cursor.getString(2));
-		    return statistic;
-		  }
+	public Statistic getLastState(){
+		Statistic st = new Statistic();
+		Cursor c = database.rawQuery("select " + StatisticTable.COLUMN_SITE_STATE + " , " +
+									 StatisticTable.COLUMN_DATE + " FROM " + StatisticTable.STATISTIC_TABLE + 
+									 " where " + StatisticTable.COLUMN_ID + " = (select MAX("+StatisticTable.COLUMN_ID +") from " + 
+									 StatisticTable.STATISTIC_TABLE + ")", null);
+		if (c != null ) {
+			if (c.moveToFirst()) {
+				st.setState(c.getString(0));
+				st.setDate(c.getString(1));
+			}
+		}
+		return st;
+	}
 }
