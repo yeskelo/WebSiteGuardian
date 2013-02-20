@@ -62,6 +62,8 @@ public class PieChartView extends GraphicalView {
 			simpleRenderer.setColor(color);
 			defaultRenderer.addSeriesRenderer(simpleRenderer);
 		}
+		defaultRenderer.setLegendTextSize(30);
+		defaultRenderer.setLabelsTextSize(30);		
 		defaultRenderer.setShowLabels(true);
 		defaultRenderer.setShowLegend(true);
 		return defaultRenderer;
