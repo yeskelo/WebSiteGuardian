@@ -154,13 +154,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			stopService(new Intent(this, CheckWebSiteService.class));
 			break;
 		case R.id.refreshButton:
+			fillAllStatesList();
 			break;
 		}
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();
+		super.onResume();	
+		allStateslistView.setAdapter(null);
+		failureStateslistView.setAdapter(null);
 		fillAllStatesList();
 	}
 }
