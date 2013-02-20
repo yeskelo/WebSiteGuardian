@@ -1,17 +1,13 @@
 package com.example.webguardian;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class StatisticDatasource {
+public class StatisticDatasource {			
 	// Database fields
 	private SQLiteDatabase database;
 	private StatisticDatabaseHelper dbHelper;
@@ -29,12 +25,10 @@ public class StatisticDatasource {
 	}
 
 	public void addRow(String siteStatus){
-
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Calendar cal = Calendar.getInstance();
+		
 		ContentValues values = new ContentValues();
 		values.put(StatisticTable.COLUMN_SITE_STATE, siteStatus);
-		values.put(StatisticTable.COLUMN_DATE, dateFormat.format(cal.getTime()));
+		values.put(StatisticTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
         database.insert(StatisticTable.STATISTIC_TABLE, null, values);
 	}
 	
@@ -51,5 +45,36 @@ public class StatisticDatasource {
 			}
 		}
 		return st;
+	}
+	
+	public Cursor getAllStates(){
+		Cursor c = database.rawQuery("select " + StatisticTable.COLUMN_ID + " , " +
+												 StatisticTable.COLUMN_SITE_STATE + " , " +
+												 StatisticTable.COLUMN_DATE + 				 								 
+				 								 " FROM " + StatisticTable.STATISTIC_TABLE , null);
+		if (c!=null)
+			c.moveToFirst();
+		return c;
+	}
+	
+	public Cursor getAllFailusresStates(){
+		Cursor c = database.rawQuery("select " + StatisticTable.COLUMN_ID + " , " + 
+											     StatisticTable.COLUMN_SITE_STATE + " , " +
+				 								 StatisticTable.COLUMN_DATE + 
+				 								 " FROM " + StatisticTable.STATISTIC_TABLE + 
+				 								 " WHERE " + StatisticTable.COLUMN_SITE_STATE + " IN('away','busy')", null);		
+		if (c!=null)
+			c.moveToFirst();
+		return c;
+	}		
+	
+	public int getStatusCount(String status){
+		Cursor c = database.rawQuery("select count(*) FROM " + StatisticTable.STATISTIC_TABLE + 
+				 " WHERE " + StatisticTable.COLUMN_SITE_STATE + " = '" + status + "'", null);		
+		if (c!=null){
+			c.moveToFirst();
+			return Integer.valueOf(c.getString(0));
+		}else
+			return 0;
 	}
 }

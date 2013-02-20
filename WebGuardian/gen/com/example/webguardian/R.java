@@ -14,30 +14,53 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int linearLayout1=0x7f080000;
-        public static final int menu_settings=0x7f080009;
-        public static final int prefCheckBox=0x7f080001;
-        public static final int refreshTime=0x7f080005;
-        public static final int refreshTimeDesc=0x7f080004;
-        public static final int runButton=0x7f080006;
-        public static final int siteCode=0x7f080008;
-        public static final int siteURL=0x7f080003;
-        public static final int siteURLDesc=0x7f080002;
-        public static final int stopButton=0x7f080007;
+        public static final int All=0x7f080004;
+        public static final int Chart=0x7f08000b;
+        public static final int Failures=0x7f080006;
+        public static final int allStatesList=0x7f080005;
+        public static final int availability=0x7f080012;
+        public static final int avil=0x7f080001;
+        public static final int failureStateList=0x7f080007;
+        public static final int hist=0x7f080000;
+        public static final int history_of_check=0x7f080011;
+        public static final int icon=0x7f08000c;
+        public static final int linearLayout1=0x7f080002;
+        public static final int menu_settings=0x7f080013;
+        public static final int refreshButton=0x7f080009;
+        public static final int runButton=0x7f080008;
+        public static final int state=0x7f08000d;
+        public static final int stateDate=0x7f08000e;
+        public static final int stateDate_header=0x7f080010;
+        public static final int state_header=0x7f08000f;
+        public static final int stopButton=0x7f08000a;
+        public static final int tabhost=0x7f080003;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
+        public static final int action_bar_layout=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int chart_layout=0x7f030002;
+        public static final int state_info=0x7f030003;
+        public static final int state_list_view_header=0x7f030004;
     }
     public static final class menu {
-        public static final int activity_main=0x7f070000;
+        public static final int action_menu=0x7f070000;
+        public static final int activity_main=0x7f070001;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
+        public static final int away_segment=0x7f050008;
+        public static final int away_state=0x7f05000d;
+        public static final int busy_segment=0x7f050007;
+        public static final int busy_state=0x7f05000c;
         public static final int hello_world=0x7f050001;
         public static final int menu_settings=0x7f050002;
+        public static final int online_segment=0x7f050006;
+        public static final int online_state=0x7f05000b;
         public static final int refresh_time=0x7f050005;
-        public static final int site_URL_preference=0x7f050004;
-        public static final int title_activity_main=0x7f050003;
+        public static final int site_URL_preference=0x7f050003;
+        public static final int state_date_header=0x7f05000a;
+        public static final int state_header=0x7f050009;
+        public static final int title_activity_main=0x7f050004;
     }
     public static final class style {
         /** 
@@ -69,5 +92,6 @@ public final class R {
     }
     public static final class xml {
         public static final int preferences=0x7f040000;
+        public static final int state_info=0x7f040001;
     }
 }

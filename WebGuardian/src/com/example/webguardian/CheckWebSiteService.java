@@ -18,19 +18,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.TextView;
 
 public class CheckWebSiteService extends Service {
 
-	static final String TAG = "UpdateService";
-
+	static final String TAG = "UpdateService";	
+	private boolean isRunning = false;
 	private Intent intent;
-	private RemoteViews remoteViews;
 	
 	private StatisticDatasource datasource;
+	ConnectivityManager connectivityManager;
 
 	private SharedPreferences pref;
 	Timer timer = new Timer();
@@ -39,6 +36,12 @@ public class CheckWebSiteService extends Service {
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
+	}
+	
+	private boolean isNetworkAvailable() {
+	    connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+	    return activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected();
 	}
 
 	@Override
@@ -56,8 +59,9 @@ public class CheckWebSiteService extends Service {
 		Log.d(TAG, "onStart");
 		intent = _intent;		
 		int i = Integer.valueOf(pref.getString("refresh_time", "1"));
-		remoteViews = new RemoteViews(this.getApplicationContext().getPackageName(), R.layout.activity_main);		 
-		timer.schedule(timerTask, 1000, i * 1000);	
+		if (isNetworkAvailable() && !isRunning){
+			timer.schedule(timerTask, 1000, i * 1000);	
+			isRunning=true;}							
 		return START_STICKY;
 	}
 
@@ -65,6 +69,7 @@ public class CheckWebSiteService extends Service {
 	public void onDestroy() {
 		Log.d(TAG, "onDestroy");
 		timer.cancel();
+		isRunning=false;
 		datasource.close();
 		super.onDestroy();
 	}
@@ -72,8 +77,8 @@ public class CheckWebSiteService extends Service {
 	public int is_online() {
 		String url = pref.getString("site_URL_preference", "");
 		// check network
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 		// if no network is available networkInfo will be null
 		// otherwise check if we are connected
 		if (networkInfo == null || !networkInfo.isConnected()) {
@@ -100,22 +105,19 @@ public class CheckWebSiteService extends Service {
 
 	private class MyTimerTask extends TimerTask {
 		@Override
-		public void run() {
+		public void run() {	
 			Log.d(TAG, "Timer started");
 			switch (is_online()) {
 			case 0:
-				remoteViews.setTextViewText(R.id.siteCode, "away");
-				datasource.addRow("away");
+				datasource.addRow(getResources().getString(R.string.away_state));
 				Log.d(TAG, "away");
 				break;
 			case 1:
-				remoteViews.setTextViewText(R.id.siteCode, "busy");
-				datasource.addRow("busy");
+				datasource.addRow(getResources().getString(R.string.busy_state));
 				Log.d(TAG, "busy");
 				break;
 			case 2:
-				remoteViews.setTextViewText(R.id.siteCode, "online");
-				datasource.addRow("online");
+				datasource.addRow(getResources().getString(R.string.online_state));
 				Log.d(TAG, "online");
 			}
 		}

@@ -4,10 +4,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
-public class UserPrefsFragment extends PreferenceFragment{
-	
+public class UserPrefsFragment extends PreferenceFragment {
+
 	SharedPreferences pref;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
