@@ -24,12 +24,12 @@ public class StatisticDatasource {
 		dbHelper.close();
 	}
 
-	public void addRow(String siteStatus){
+	public int addRow(String siteStatus){
 		
 		ContentValues values = new ContentValues();
 		values.put(StatisticTable.COLUMN_SITE_STATE, siteStatus);
 		values.put(StatisticTable.COLUMN_DATE, (Long.valueOf(Calendar.getInstance().getTimeInMillis()).toString()));
-        database.insert(StatisticTable.STATISTIC_TABLE, null, values);
+        return (int) database.insert(StatisticTable.STATISTIC_TABLE, null, values);
 	}
 	
 	public Statistic getLastState(){

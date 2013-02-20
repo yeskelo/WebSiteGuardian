@@ -1,8 +1,5 @@
 package com.example.webguardian;
 
-import java.sql.Date;
-import java.util.Calendar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -68,10 +64,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		datasource = new StatisticDatasource(this);
 		datasource.open();
-		
-		String str = (String) DateUtils.getRelativeDateTimeString(this, Calendar.getInstance().getTimeInMillis()-10000000, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0);
-		
-		fillAllStatesList();
+		fillAllStatesList();	
 	}
 
 

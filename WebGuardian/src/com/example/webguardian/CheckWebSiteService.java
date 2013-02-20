@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -108,7 +109,7 @@ public class CheckWebSiteService extends Service {
 		public void run() {	
 			Log.d(TAG, "Timer started");
 			switch (is_online()) {
-			case 0:
+			case 0:				
 				datasource.addRow(getResources().getString(R.string.away_state));
 				Log.d(TAG, "away");
 				break;
@@ -117,11 +118,20 @@ public class CheckWebSiteService extends Service {
 				Log.d(TAG, "busy");
 				break;
 			case 2:
-				datasource.addRow(getResources().getString(R.string.online_state));
+				saveState();
+				/*datasource.addRow(getResources().getString(R.string.online_state));*/
 				Log.d(TAG, "online");
 			}
 		}
 
 	}
+	
+	private void saveState() {
+	    ContentValues values = new ContentValues();
+	    values.put(StatisticTable.COLUMN_SITE_STATE, "qwerty");
+	    values.put(StatisticTable.COLUMN_DATE, "1111");
+	    getContentResolver().insert(WebGuardianContentProvider.CONTENT_URI, values);	    
+	  }
+ 
 
 }
