@@ -161,6 +161,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		allStateslistView.setAdapter(null);
+		failureStateslistView.setAdapter(null);
 		fillAllStatesList();
 	}
 }
