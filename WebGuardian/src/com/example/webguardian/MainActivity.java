@@ -88,7 +88,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
 				if (view.getId() == R.id.icon) {
-					((ImageView) view).setImageResource(R.drawable.ic_launcher);
+					if (cursor.getString(1).equals(getResources().getString(R.string.busy_state))) 
+						((ImageView) view).setImageResource(R.drawable.busy);
+					else if ((cursor.getString(1).equals(getResources().getString(R.string.busy_state))))
+						((ImageView) view).setImageResource(R.drawable.away);
+					else if ((cursor.getString(1).equals(getResources().getString(R.string.online_state))))
+						((ImageView) view).setImageResource(R.drawable.online);					
 					return true; // true because the data was bound to the view
 				}
 				return false;
@@ -106,7 +111,10 @@ public class MainActivity extends Activity implements OnClickListener {
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
 				if (view.getId() == R.id.icon) {
-					((ImageView) view).setImageResource(R.drawable.ic_launcher);
+					if (cursor.getString(1).equals(getResources().getString(R.string.busy_state))) {
+						((ImageView) view).setImageResource(R.drawable.busy);
+					}else if ((cursor.getString(1).equals(getResources().getString(R.string.busy_state))))
+						((ImageView) view).setImageResource(R.drawable.away);
 					return true; // true because the data was bound to the view
 				}
 				return false;
