@@ -53,7 +53,7 @@ public class PieChartView extends GraphicalView {
 	private static DefaultRenderer getRenderer()
 	{
 		int[] colors = new int[] { COLOR_GREEN, COLOR_ORANGE, COLOR_BLUE };
- 
+		 
 		DefaultRenderer defaultRenderer = new DefaultRenderer();
 		for (int color : colors)
 		{
@@ -62,6 +62,8 @@ public class PieChartView extends GraphicalView {
 			simpleRenderer.setColor(color);
 			defaultRenderer.addSeriesRenderer(simpleRenderer);
 		}
+		defaultRenderer.setLegendTextSize(30);
+		defaultRenderer.setLabelsTextSize(30);		
 		defaultRenderer.setShowLabels(true);
 		defaultRenderer.setShowLegend(true);
 		return defaultRenderer;
