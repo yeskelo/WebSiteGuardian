@@ -1,9 +1,13 @@
 package com.example.webguardian;
 
+import java.sql.Date;
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Switch;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -62,7 +68,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		datasource = new StatisticDatasource(this);
 		datasource.open();
-
+		
+		String str = (String) DateUtils.getRelativeDateTimeString(this, Calendar.getInstance().getTimeInMillis()-10000000, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0);
+		
 		fillAllStatesList();
 	}
 
@@ -95,6 +103,9 @@ public class MainActivity extends Activity implements OnClickListener {
 					else if ((cursor.getString(1).equals(getResources().getString(R.string.online_state))))
 						((ImageView) view).setImageResource(R.drawable.online);					
 					return true; // true because the data was bound to the view
+				} else if (view.getId() == R.id.stateDate){
+					((TextView) view).setText((String) DateUtils.getRelativeDateTimeString( MainActivity.this, Long.valueOf(cursor.getString(2)), DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0));
+					return true;
 				}
 				return false;
 			}
@@ -116,13 +127,16 @@ public class MainActivity extends Activity implements OnClickListener {
 					}else if ((cursor.getString(1).equals(getResources().getString(R.string.busy_state))))
 						((ImageView) view).setImageResource(R.drawable.away);
 					return true; // true because the data was bound to the view
+				} else if (view.getId() == R.id.stateDate){
+					((TextView) view).setText((String) DateUtils.getRelativeDateTimeString( MainActivity.this, Long.valueOf(cursor.getString(2)), DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0));
+					return true; // true because the data was bound to the view
 				}
 				return false;
 			}
-		});
+					
+		});		
 		/*failureStateslistView.addHeaderView(header);*/
 		failureStateslistView.setAdapter(dataAdapter);
-
 	}
 
 	@Override
@@ -162,14 +176,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			stopService(new Intent(this, CheckWebSiteService.class));
 			break;
 		case R.id.refreshButton:
-			fillAllStatesList();
 			break;
 		}
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();	
+		super.onResume();
 		allStateslistView.setAdapter(null);
 		failureStateslistView.setAdapter(null);
 		fillAllStatesList();

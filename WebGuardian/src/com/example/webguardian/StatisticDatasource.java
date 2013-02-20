@@ -28,7 +28,7 @@ public class StatisticDatasource {
 		
 		ContentValues values = new ContentValues();
 		values.put(StatisticTable.COLUMN_SITE_STATE, siteStatus);
-		values.put(StatisticTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
+		values.put(StatisticTable.COLUMN_DATE, (Long.valueOf(Calendar.getInstance().getTimeInMillis()).toString()));
         database.insert(StatisticTable.STATISTIC_TABLE, null, values);
 	}
 	
