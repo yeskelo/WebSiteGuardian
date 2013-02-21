@@ -32,7 +32,9 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(1, null, this);
 
 		setContentView(R.layout.activity_main);
 
@@ -66,16 +68,11 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 
 		getActionBar().setDisplayShowTitleEnabled(false);
 
-		datasource = new StatisticDatasource(this);
-		datasource.open();
 		fillAllStatesList();	
 	}
 
 
 	private void fillAllStatesList() {
-
-		Cursor allStatesCursor = datasource.getAllStates();
-		Cursor failureStatesCursor = datasource.getAllFailusresStates();
 
 		String[] columns = new String[] { StatisticTable.COLUMN_SITE_STATE,
 				StatisticTable.COLUMN_SITE_STATE, StatisticTable.COLUMN_DATE };
@@ -83,14 +80,14 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 		int[] to = new int[] { R.id.icon, R.id.state, R.id.stateDate };
 
 		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
-				allStatesCursor, columns, to, 0);
-		dataAdapter.setViewBinder(new CustomViewBinder(this));
-		allStateslistView.setAdapter(dataAdapter);
-
-		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
-				failureStatesCursor, columns, to, 0);
+				null, columns, to, 0);
 		dataAdapter.setViewBinder(new CustomViewBinder(this));
 		failureStateslistView.setAdapter(dataAdapter);
+
+		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
+				null, columns, to, 0);
+		dataAdapter.setViewBinder(new CustomViewBinder(this));
+		allStateslistView.setAdapter(dataAdapter);
 	}
 
 	@Override
@@ -144,8 +141,13 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {		
+		CursorLoader loader = null;
+		if (id == 0){
+			loader = new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);}
+		else if (id == 1){
+			loader = new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);}
+		return loader;
 	}
 
 

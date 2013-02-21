@@ -65,8 +65,8 @@ public class WebGuardianContentProvider extends ContentProvider {
 			break;
 		default:
 			throw new IllegalArgumentException("Unsuported URI " + uri);
-		}
-		String orderBy = TextUtils.isEmpty(sortOrder) ? " desc"	: sortOrder;
+		}		
+		String orderBy = TextUtils.isEmpty(sortOrder) ? " 'desc'"	: sortOrder;
 		Cursor cursor = queryBuilder.query(database.getDatabase(), projection, selection, selectionArgs, null, null, orderBy);
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		return cursor;
