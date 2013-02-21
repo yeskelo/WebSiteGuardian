@@ -77,4 +77,8 @@ public class StatisticDatasource {
 		}else
 			return 0;
 	}
+	
+	public SQLiteDatabase getDatabase() {
+		return database;
+	}
 }

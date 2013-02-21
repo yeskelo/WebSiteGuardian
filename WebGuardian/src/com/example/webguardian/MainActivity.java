@@ -1,7 +1,10 @@
 package com.example.webguardian;
 
 import android.app.Activity;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -16,7 +19,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
 
 	Button runButton;
 	Button stopButton;
@@ -29,6 +32,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getLoaderManager().initLoader(0, null, this);
 
 		setContentView(R.layout.activity_main);
 
@@ -69,66 +73,23 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
 	private void fillAllStatesList() {
-		/*View header = getLayoutInflater().inflate(R.layout.state_list_view_header, null);*/
 
 		Cursor allStatesCursor = datasource.getAllStates();
 		Cursor failureStatesCursor = datasource.getAllFailusresStates();
 
-		// The desired columns to be bound
 		String[] columns = new String[] { StatisticTable.COLUMN_SITE_STATE,
 				StatisticTable.COLUMN_SITE_STATE, StatisticTable.COLUMN_DATE };
 
-		// the XML defined views which the data will be bound to
 		int[] to = new int[] { R.id.icon, R.id.state, R.id.stateDate };
 
 		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
 				allStatesCursor, columns, to, 0);
-		dataAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-
-			@Override
-			public boolean setViewValue(View view, Cursor cursor,
-					int columnIndex) {
-				if (view.getId() == R.id.icon) {
-					if (cursor.getString(1).equals(getResources().getString(R.string.busy_state))) 
-						((ImageView) view).setImageResource(R.drawable.busy);
-					else if ((cursor.getString(1).equals(getResources().getString(R.string.busy_state))))
-						((ImageView) view).setImageResource(R.drawable.away);
-					else if ((cursor.getString(1).equals(getResources().getString(R.string.online_state))))
-						((ImageView) view).setImageResource(R.drawable.online);					
-					return true; // true because the data was bound to the view
-				} else if (view.getId() == R.id.stateDate){
-					((TextView) view).setText((String) DateUtils.getRelativeDateTimeString( MainActivity.this, Long.valueOf(cursor.getString(2)), DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0));
-					return true;
-				}
-				return false;
-			}
-		});
-
-		/*allStateslistView.addHeaderView(header);*/
+		dataAdapter.setViewBinder(new CustomViewBinder(this));
 		allStateslistView.setAdapter(dataAdapter);
 
 		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
 				failureStatesCursor, columns, to, 0);
-		dataAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-
-			@Override
-			public boolean setViewValue(View view, Cursor cursor,
-					int columnIndex) {
-				if (view.getId() == R.id.icon) {
-					if (cursor.getString(1).equals(getResources().getString(R.string.busy_state))) {
-						((ImageView) view).setImageResource(R.drawable.busy);
-					}else if ((cursor.getString(1).equals(getResources().getString(R.string.busy_state))))
-						((ImageView) view).setImageResource(R.drawable.away);
-					return true; // true because the data was bound to the view
-				} else if (view.getId() == R.id.stateDate){
-					((TextView) view).setText((String) DateUtils.getRelativeDateTimeString( MainActivity.this, Long.valueOf(cursor.getString(2)), DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0));
-					return true; // true because the data was bound to the view
-				}
-				return false;
-			}
-					
-		});		
-		/*failureStateslistView.addHeaderView(header);*/
+		dataAdapter.setViewBinder(new CustomViewBinder(this));
 		failureStateslistView.setAdapter(dataAdapter);
 	}
 
@@ -179,5 +140,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		allStateslistView.setAdapter(null);
 		failureStateslistView.setAdapter(null);
 		fillAllStatesList();
+	}
+
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);
+	}
+
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		dataAdapter.swapCursor(cursor); 
+		dataAdapter.notifyDataSetChanged();		
+	}
+
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		dataAdapter.swapCursor(null);
 	}
 }
