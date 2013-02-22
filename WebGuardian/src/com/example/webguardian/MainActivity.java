@@ -7,34 +7,33 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
-import android.widget.TextView;
+import android.widget.TabHost.OnTabChangeListener;
 
-public class MainActivity extends Activity implements OnClickListener, LoaderCallbacks<Cursor> {
+public class MainActivity extends Activity implements OnClickListener,
+		LoaderCallbacks<Cursor> {
 
 	Button runButton;
 	Button stopButton;
 	Button refreshButton;
 	ListView allStateslistView;
 	ListView failureStateslistView;
-	private StatisticDatasource datasource;
 	private SimpleCursorAdapter dataAdapter;
+	TabHost tabs;
+	CursorLoader loader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		getLoaderManager().initLoader(0, null, this);
-		getLoaderManager().initLoader(1, null, this);
+
+		loader = (CursorLoader) getLoaderManager().initLoader(0, null, this);
 
 		setContentView(R.layout.activity_main);
 
@@ -49,8 +48,7 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 		stopButton.setOnClickListener((OnClickListener) this);
 		refreshButton.setOnClickListener((OnClickListener) this);
 
-		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
-
+		tabs = (TabHost) findViewById(R.id.tabhost);
 		tabs.setup();
 
 		TabHost.TabSpec spec1 = tabs.newTabSpec("tag1");
@@ -63,14 +61,27 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 		TabHost.TabSpec spec2 = tabs.newTabSpec("tag2");
 		spec2.setContent(R.id.failureStateList);
 		spec2.setIndicator("Failure States");
-
 		tabs.addTab(spec2);
 
+		tabs.setOnTabChangedListener(new OnTabChangeListener() {
+			
+			@Override
+			public void onTabChanged(String tabId) {
+				if (tabId == "tag1"){
+					allStateslistView.setAdapter(dataAdapter);
+					loader.setSelection(StatisticTable.COLUMN_SITE_STATE + "='online'");
+				}
+				else if (tabId == "tag2"){
+					failureStateslistView.setAdapter(dataAdapter);
+					loader.setSelection(StatisticTable.COLUMN_SITE_STATE + " in ('away','busy')");
+				}
+				loader.forceLoad();
+			}
+		});
 		getActionBar().setDisplayShowTitleEnabled(false);
 
-		fillAllStatesList();	
+		fillAllStatesList();
 	}
-
 
 	private void fillAllStatesList() {
 
@@ -79,14 +90,10 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 
 		int[] to = new int[] { R.id.icon, R.id.state, R.id.stateDate };
 
-		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
-				null, columns, to, 0);
+		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info, null,
+				columns, to, 0);
 		dataAdapter.setViewBinder(new CustomViewBinder(this));
 		failureStateslistView.setAdapter(dataAdapter);
-
-		dataAdapter = new SimpleCursorAdapter(this, R.layout.state_info,
-				null, columns, to, 0);
-		dataAdapter.setViewBinder(new CustomViewBinder(this));
 		allStateslistView.setAdapter(dataAdapter);
 	}
 
@@ -118,7 +125,6 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 
 	@Override
 	public void onClick(View src) {
-		datasource.open();
 		switch (src.getId()) {
 		case R.id.runButton:
 			startService(new Intent(this, CheckWebSiteService.class));
@@ -134,29 +140,19 @@ public class MainActivity extends Activity implements OnClickListener, LoaderCal
 	@Override
 	protected void onResume() {
 		super.onResume();
-		allStateslistView.setAdapter(null);
-		failureStateslistView.setAdapter(null);
-		fillAllStatesList();
 	}
-
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {		
-		CursorLoader loader = null;
-		if (id == 0){
-			loader = new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);}
-		else if (id == 1){
-			loader = new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI, null, null, null, null);}
-		return loader;
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new CursorLoader(this, WebGuardianContentProvider.CONTENT_URI,
+				null, null, null, null);
 	}
-
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		dataAdapter.swapCursor(cursor); 
-		dataAdapter.notifyDataSetChanged();		
+		dataAdapter.swapCursor(cursor);
+		dataAdapter.notifyDataSetChanged();
 	}
-
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {

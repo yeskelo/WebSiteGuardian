@@ -1,6 +1,7 @@
 package com.example.webguardian;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,7 +28,6 @@ public class CheckWebSiteService extends Service {
 	private boolean isRunning = false;
 	private Intent intent;
 	
-	private StatisticDatasource datasource;
 	ConnectivityManager connectivityManager;
 
 	private SharedPreferences pref;
@@ -49,8 +49,6 @@ public class CheckWebSiteService extends Service {
 	public void onCreate() {
 		super.onCreate();	
 		pref = PreferenceManager.getDefaultSharedPreferences(this);		
-		datasource = new StatisticDatasource(this);
-		datasource.open();
 		Log.d(TAG, "onCreated");
 	}
 
@@ -71,7 +69,6 @@ public class CheckWebSiteService extends Service {
 		Log.d(TAG, "onDestroy");
 		timer.cancel();
 		isRunning=false;
-		datasource.close();
 		super.onDestroy();
 	}
 
@@ -110,26 +107,25 @@ public class CheckWebSiteService extends Service {
 			Log.d(TAG, "Timer started");
 			switch (is_online()) {
 			case 0:				
-				datasource.addRow(getResources().getString(R.string.away_state));
+				saveState("away");
 				Log.d(TAG, "away");
 				break;
 			case 1:
-				datasource.addRow(getResources().getString(R.string.busy_state));
+				saveState("busy");
 				Log.d(TAG, "busy");
 				break;
 			case 2:
-				saveState();
-				/*datasource.addRow(getResources().getString(R.string.online_state));*/
+				saveState("online");
 				Log.d(TAG, "online");
 			}
 		}
 
 	}
 	
-	private void saveState() {
+	private void saveState(String state) {
 	    ContentValues values = new ContentValues();
-	    values.put(StatisticTable.COLUMN_SITE_STATE, "qwerty");
-	    values.put(StatisticTable.COLUMN_DATE, "1111");
+	    values.put(StatisticTable.COLUMN_SITE_STATE, state);
+	    values.put(StatisticTable.COLUMN_DATE, Calendar.getInstance().getTimeInMillis());
 	    getContentResolver().insert(WebGuardianContentProvider.CONTENT_URI, values);	    
 	  }
  
